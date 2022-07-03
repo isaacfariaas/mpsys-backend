@@ -28,7 +28,7 @@ Route::post('/login', function(Request $request){
         $user = Auth::user();
         $token = $user->createToken('JWT');
 
-        return response()->json($token->plainTextToken,200);
+        return response()->json(["login"=>true,"token"=>$token->plainTextToken,"error"=>""],200);
     }
-    return response()->json('Usuario invalido', 401);
+    return response()->json(["login"=>false,"token"=>"","error"=>"User invalid"], 401);
 });
