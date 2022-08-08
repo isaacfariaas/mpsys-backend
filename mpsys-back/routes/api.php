@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,17 +19,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = Auth::user();
-    return response()->json($user,200);
+    return response()->json($user, 200);
 });
 
-Route::post('/login', function(Request $request){
+Route::post('/login', function (Request $request) {
 
-    if (Auth::attempt(['email'=> $request->email,'password'=> $request->password])) {
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
 
         $user = Auth::user();
+        //VSCODE não identifica o método, por isso o erro
         $token = $user->createToken('JWT');
 
-        return response()->json(["login"=>true,"token"=>$token->plainTextToken,"error"=>""],200);
+        return response()->json(["login" => true, "token" => $token->plainTextToken, "error" => ""], 200);
     }
-    return response()->json(["login"=>false,"token"=>"","error"=>"User invalid"], 401);
+    return response()->json(["login" => false, "token" => "", "error" => "User invalid"], 401);
 });
+
+Route::post('register', [UserController::class, 'store']);
